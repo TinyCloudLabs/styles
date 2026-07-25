@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="TinyCloud shared styles specimen in light and dark themes."
+    >
+    <title>TinyCloud styles specimen</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="../src/index.css">
+    <style>
+      .specimen-shell {
+        position: relative;
+        z-index: 1;
+        width: min(calc(100% - 2rem), 72rem);
+        margin-inline: auto;
+        padding-block: 4rem;
+      }
+
+      .specimen-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--tc-space-5);
+        margin-block-end: var(--tc-space-7);
+      }
+
+      .specimen-title {
+        margin-block-end: var(--tc-space-2);
+      }
+
+      .specimen-intro {
+        margin: 0;
+        color: var(--tc-color-text-muted);
+      }
+
+      .specimen-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(16rem, 0.65fr);
+        gap: var(--tc-space-5);
+      }
+
+      .specimen-grid > * {
+        min-width: 0;
+      }
+
+      .specimen-section {
+        padding: var(--tc-space-5);
+      }
+
+      .specimen-section h2 {
+        margin-block-end: var(--tc-space-4);
+      }
+
+      .specimen-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--tc-space-2);
+      }
+
+      .specimen-service {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--tc-space-4);
+        padding: var(--tc-space-4);
+        border-bottom: 1px solid var(--tc-color-border);
+      }
+
+      .specimen-service:last-child {
+        border-bottom: 0;
+      }
+
+      .specimen-service strong,
+      .specimen-service span {
+        display: block;
+      }
+
+      .specimen-service span {
+        color: var(--tc-color-text-muted);
+        font-family: var(--tc-font-mono);
+        font-size: var(--tc-text-xs);
+      }
+
+      .specimen-field {
+        margin-block-end: var(--tc-space-4);
+      }
+
+      @media (max-width: 48rem) {
+        .specimen-shell {
+          padding-block: var(--tc-space-6);
+        }
+
+        .specimen-header {
+          align-items: stretch;
+          flex-direction: column;
+          margin-block-end: var(--tc-space-6);
+        }
+
+        .specimen-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body class="tc-field">
+    <main class="specimen-shell">
+      <header class="specimen-header">
+        <div>
+          <h1 class="specimen-title">TinyCloud styles</h1>
+          <p class="specimen-intro">
+            A calm, inspectable product language for capability systems and
+            user-controlled data.
+          </p>
+        </div>
+        <button class="tc-button" id="theme-toggle" type="button">
+          Use dark theme
+        </button>
+      </header>
+
+      <div class="specimen-grid">
+        <div class="tc-stack">
+          <section class="tc-panel specimen-section">
+            <div class="tc-toolbar">
+              <span class="tc-badge tc-badge--mono">POST /invoke</span>
+              <span class="tc-status tc-status--success">Verified</span>
+              <span class="tc-status tc-status--warning">Expires in 4m</span>
+            </div>
+            <h2>Invocation trace</h2>
+            <ol class="tc-trace" aria-label="Invocation trace">
+              <li class="tc-trace__step">
+                <span class="tc-trace__label">Ingress</span>
+                <span class="tc-trace__meta">request</span>
+              </li>
+              <li class="tc-trace__step" aria-current="step">
+                <span class="tc-trace__label">Policy</span>
+                <span class="tc-trace__meta">ucan/verify</span>
+              </li>
+              <li class="tc-trace__step">
+                <span class="tc-trace__label">Service</span>
+                <span class="tc-trace__meta">kv/put</span>
+              </li>
+              <li class="tc-trace__step">
+                <span class="tc-trace__label">Storage</span>
+                <span class="tc-trace__meta">space/dag</span>
+              </li>
+            </ol>
+          </section>
+
+          <section class="tc-panel" aria-labelledby="decision-title">
+            <div class="specimen-service">
+              <div>
+                <strong id="decision-title">Authorization decision</strong>
+                <span>did:key:z6Mkh… → tc:kv/put</span>
+              </div>
+              <span class="tc-status tc-status--info">Scoped</span>
+            </div>
+            <div class="tc-data-row">
+              <span class="tc-data-row__label">Space</span>
+              <span class="tc-data-row__value">did:key:z6MkhaX4F9…</span>
+            </div>
+            <div class="tc-data-row">
+              <span class="tc-data-row__label">Resource</span>
+              <span class="tc-data-row__value">tinycloud://space/kv/profile</span>
+            </div>
+            <div class="tc-data-row">
+              <span class="tc-data-row__label">Replay protection</span>
+              <span class="tc-data-row__value">nonce:6a935c · unused</span>
+            </div>
+          </section>
+        </div>
+
+        <aside class="tc-stack">
+          <section class="tc-panel specimen-section">
+            <h2>Controls</h2>
+            <div class="specimen-field">
+              <label class="tc-label" for="resource">Resource</label>
+              <input
+                class="tc-input"
+                id="resource"
+                value="tinycloud://space/kv/profile"
+              >
+              <p class="tc-help">Canonical TinyCloud resource URI.</p>
+            </div>
+            <div class="specimen-field">
+              <label class="tc-label" for="invalid-resource">
+                Invalid scope
+              </label>
+              <input
+                class="tc-input"
+                id="invalid-resource"
+                aria-invalid="true"
+                aria-describedby="invalid-help"
+                value="tinycloud://other-space/*"
+              >
+              <p class="tc-help" id="invalid-help">
+                The delegation does not cover this space.
+              </p>
+            </div>
+            <div class="specimen-actions">
+              <button class="tc-button tc-button--primary" type="button">
+                Re-run check
+              </button>
+              <button class="tc-button" type="button">Inspect proof</button>
+              <button class="tc-button" type="button" disabled>Loading</button>
+            </div>
+          </section>
+
+          <section class="tc-panel specimen-section">
+            <h2>Loading shape</h2>
+            <div class="tc-stack" aria-hidden="true">
+              <div class="tc-skeleton" style="width: 45%"></div>
+              <div class="tc-skeleton" style="width: 100%"></div>
+              <div class="tc-skeleton" style="width: 72%"></div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <script>
+      const root = document.documentElement;
+      const toggle = document.querySelector("#theme-toggle");
+      const requestedTheme = new URLSearchParams(location.search).get("theme");
+
+      if (requestedTheme === "dark") {
+        root.dataset.theme = "dark";
+        toggle.textContent = "Use light theme";
+      }
+
+      toggle.addEventListener("click", () => {
+        const dark = root.dataset.theme === "dark";
+        root.dataset.theme = dark ? "light" : "dark";
+        toggle.textContent = dark ? "Use dark theme" : "Use light theme";
+      });
+    </script>
+  </body>
+</html>

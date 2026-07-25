@@ -1,0 +1,115 @@
+@layer tc.base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--tc-font-sans);
+    color: var(--tc-color-text);
+    background: var(--tc-color-page);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-width: 20rem;
+    margin: 0;
+    color: var(--tc-color-text);
+    background: var(--tc-color-page);
+    font-size: var(--tc-text-md);
+    line-height: var(--tc-leading-ui);
+  }
+
+  h1,
+  h2,
+  h3,
+  p {
+    margin-block-start: 0;
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: var(--tc-color-text);
+    line-height: var(--tc-leading-tight);
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: var(--tc-text-2xl);
+    letter-spacing: var(--tc-tracking-tight);
+  }
+
+  h2 {
+    font-size: var(--tc-text-xl);
+  }
+
+  h3 {
+    font-size: var(--tc-text-lg);
+  }
+
+  p {
+    max-width: var(--tc-prose-max);
+    line-height: var(--tc-leading-prose);
+    text-wrap: pretty;
+  }
+
+  a {
+    color: var(--tc-color-link);
+    text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+    text-underline-offset: 0.18em;
+  }
+
+  a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--tc-font-mono);
+  }
+
+  code {
+    font-size: 0.92em;
+  }
+
+  ::selection {
+    color: var(--tc-color-text);
+    background: var(--tc-color-selection);
+  }
+
+  :where(button, input, select, textarea) {
+    font: inherit;
+  }
+
+  :where(button, input, select, textarea, a):focus-visible {
+    outline: 2px solid var(--tc-color-focus);
+    outline-offset: 2px;
+    box-shadow: var(--tc-focus-ring);
+  }
+
+  :where(button, input, select, textarea):disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  ::placeholder {
+    color: var(--tc-color-text-muted);
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

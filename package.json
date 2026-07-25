@@ -1,0 +1,23 @@
+{
+  "name": "@tinycloud/styles",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared design tokens and product UI styles for TinyCloud.",
+  "license": "UNLICENSED",
+  "style": "./src/index.css",
+  "files": [
+    "src",
+    "DESIGN.md",
+    "README.md"
+  ],
+  "exports": {
+    ".": "./src/index.css",
+    "./tokens.css": "./src/tokens.css",
+    "./base.css": "./src/base.css",
+    "./patterns.css": "./src/patterns.css"
+  },
+  "scripts": {
+    "test": "node scripts/verify.mjs",
+    "specimen": "python3 -m http.server 4173"
+  }
+}

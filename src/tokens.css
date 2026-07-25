@@ -1,0 +1,155 @@
+/*
+ * TinyCloud design tokens.
+ *
+ * The palette originated in the OpenCredentials product system. Components
+ * consume semantic roles so that themes can change without component rewrites.
+ */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Primitive palette */
+  --tc-palette-blue-500: #2a56f6;
+  --tc-palette-blue-600: #1e42c8;
+  --tc-palette-blue-400: #3d66f7;
+  --tc-palette-blue-300: #6a9aff;
+  --tc-palette-white: #ffffff;
+  --tc-palette-slate-25: #f8f9fb;
+  --tc-palette-slate-50: #f1f5f9;
+  --tc-palette-slate-200: #e2e8f0;
+  --tc-palette-slate-400: #94a3b8;
+  --tc-palette-slate-500: #64748b;
+  --tc-palette-ink: #1a1c21;
+  --tc-palette-night-950: #0b0e14;
+  --tc-palette-night-900: #12151e;
+  --tc-palette-night-850: #161922;
+  --tc-palette-night-800: #1e2433;
+
+  /* Typography */
+  --tc-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --tc-font-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono",
+    Menlo, monospace;
+  --tc-text-xs: 0.75rem;
+  --tc-text-sm: 0.8125rem;
+  --tc-text-md: 0.875rem;
+  --tc-text-lg: 1rem;
+  --tc-text-xl: 1.25rem;
+  --tc-text-2xl: 1.75rem;
+  --tc-leading-tight: 1.25;
+  --tc-leading-ui: 1.5;
+  --tc-leading-prose: 1.65;
+  --tc-weight-regular: 400;
+  --tc-weight-medium: 500;
+  --tc-weight-semibold: 600;
+  --tc-tracking-tight: -0.02em;
+  --tc-tracking-label: 0.04em;
+
+  /* Spacing and geometry */
+  --tc-space-1: 0.25rem;
+  --tc-space-2: 0.5rem;
+  --tc-space-3: 0.75rem;
+  --tc-space-4: 1rem;
+  --tc-space-5: 1.5rem;
+  --tc-space-6: 2rem;
+  --tc-space-7: 3rem;
+  --tc-radius-sm: 0.25rem;
+  --tc-radius-md: 0.5rem;
+  --tc-radius-lg: 1rem;
+  --tc-radius-pill: 999px;
+  --tc-content-max: 87.5rem;
+  --tc-prose-max: 72ch;
+
+  /* Motion and layering */
+  --tc-duration-fast: 150ms;
+  --tc-duration-normal: 220ms;
+  --tc-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --tc-z-dropdown: 20;
+  --tc-z-sticky: 30;
+  --tc-z-backdrop: 40;
+  --tc-z-modal: 50;
+  --tc-z-toast: 60;
+  --tc-z-tooltip: 70;
+
+  /* Semantic color roles: light */
+  --tc-color-page: var(--tc-palette-slate-25);
+  --tc-color-surface: var(--tc-palette-white);
+  --tc-color-surface-subtle: var(--tc-palette-slate-50);
+  --tc-color-surface-active: #eef4ff;
+  --tc-color-text: var(--tc-palette-ink);
+  --tc-color-text-muted: var(--tc-palette-slate-500);
+  --tc-color-text-disabled: #6b7280;
+  --tc-color-border: var(--tc-palette-slate-200);
+  --tc-color-hairline: var(--tc-palette-slate-50);
+  --tc-color-accent: var(--tc-palette-blue-500);
+  --tc-color-accent-hover: var(--tc-palette-blue-400);
+  --tc-color-accent-active: var(--tc-palette-blue-600);
+  --tc-color-on-accent: var(--tc-palette-white);
+  --tc-color-focus: var(--tc-palette-blue-500);
+  --tc-color-link: var(--tc-palette-blue-600);
+  --tc-color-status-success: #087a55;
+  --tc-color-status-warning: #8a4b08;
+  --tc-color-status-danger: #b42318;
+  --tc-color-status-info: var(--tc-palette-blue-600);
+  --tc-color-selection: rgba(42, 86, 246, 0.18);
+  --tc-color-field-dot: rgba(42, 86, 246, 0.08);
+  --tc-shadow-compact: 0 4px 8px rgba(15, 23, 42, 0.08);
+  --tc-focus-ring: 0 0 0 3px rgba(42, 86, 246, 0.24);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --tc-color-page: var(--tc-palette-night-950);
+  --tc-color-surface: var(--tc-palette-night-900);
+  --tc-color-surface-subtle: var(--tc-palette-night-850);
+  --tc-color-surface-active: #172447;
+  --tc-color-text: #e2e8f0;
+  --tc-color-text-muted: var(--tc-palette-slate-400);
+  --tc-color-text-disabled: #8490a1;
+  --tc-color-border: var(--tc-palette-night-800);
+  --tc-color-hairline: #1e2330;
+  --tc-color-accent: var(--tc-palette-blue-300);
+  --tc-color-accent-hover: #8aafff;
+  --tc-color-accent-active: var(--tc-palette-blue-400);
+  --tc-color-on-accent: var(--tc-palette-night-950);
+  --tc-color-focus: var(--tc-palette-blue-300);
+  --tc-color-link: #8aafff;
+  --tc-color-status-success: #5dd6a7;
+  --tc-color-status-warning: #f4b860;
+  --tc-color-status-danger: #ff8a80;
+  --tc-color-status-info: #8aafff;
+  --tc-color-selection: rgba(106, 154, 255, 0.24);
+  --tc-color-field-dot: rgba(106, 154, 255, 0.13);
+  --tc-shadow-compact: 0 4px 8px rgba(0, 0, 0, 0.36);
+  --tc-focus-ring: 0 0 0 3px rgba(106, 154, 255, 0.28);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="system"] {
+    color-scheme: dark;
+    --tc-color-page: var(--tc-palette-night-950);
+    --tc-color-surface: var(--tc-palette-night-900);
+    --tc-color-surface-subtle: var(--tc-palette-night-850);
+    --tc-color-surface-active: #172447;
+    --tc-color-text: #e2e8f0;
+    --tc-color-text-muted: var(--tc-palette-slate-400);
+    --tc-color-text-disabled: #8490a1;
+    --tc-color-border: var(--tc-palette-night-800);
+    --tc-color-hairline: #1e2330;
+    --tc-color-accent: var(--tc-palette-blue-300);
+    --tc-color-accent-hover: #8aafff;
+    --tc-color-accent-active: var(--tc-palette-blue-400);
+    --tc-color-on-accent: var(--tc-palette-night-950);
+    --tc-color-focus: var(--tc-palette-blue-300);
+    --tc-color-link: #8aafff;
+    --tc-color-status-success: #5dd6a7;
+    --tc-color-status-warning: #f4b860;
+    --tc-color-status-danger: #ff8a80;
+    --tc-color-status-info: #8aafff;
+    --tc-color-selection: rgba(106, 154, 255, 0.24);
+    --tc-color-field-dot: rgba(106, 154, 255, 0.13);
+    --tc-shadow-compact: 0 4px 8px rgba(0, 0, 0, 0.36);
+    --tc-focus-ring: 0 0 0 3px rgba(106, 154, 255, 0.28);
+  }
+}
