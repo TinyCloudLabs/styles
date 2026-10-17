@@ -21,10 +21,12 @@ control of behavior and markup while sharing a stable visual vocabulary.
 
 ## Use
 
-Install directly from the private repository:
+Install from the GitHub repository:
 
 ```sh
-npm install github:TinyCloudLabs/styles
+npm install git+https://github.com/TinyCloudLabs/styles.git
+# or
+bun add git+https://github.com/TinyCloudLabs/styles.git
 ```
 
 Import the complete layer:
@@ -73,3 +75,8 @@ Then open `http://localhost:4173/specimen/`.
 
 See [DESIGN.md](./DESIGN.md) for principles, token policy, and contribution
 guidance.
+
+## Licence
+
+Licensed under the TinyCloud Ecosystem General Public License (EGPL) v1.5.
+See [LICENSE.md](LICENSE.md).
