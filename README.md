@@ -13,7 +13,7 @@ technical information remains calm, and detail appears when it becomes useful.
 - Accessible light and dark themes
 - Base typography, focus, form, and motion behavior
 - Reusable product patterns for buttons, fields, badges, panels, status,
-  toolbars, data rows, traces, and skeletons
+  toolbars, data rows, traces, skeletons, and long-form prose (`.tc-prose`)
 - A zero-build specimen showing the system in context
 
 This is intentionally not a React component library. Product repositories keep
@@ -60,6 +60,59 @@ Use semantic tokens in product code:
   border-radius: var(--tc-radius-md);
 }
 ```
+
+Render markdown (or any long-form HTML) with `.tc-prose` on the container. It
+styles headings `h1`–`h4`, paragraphs, lists, blockquotes, inline and block
+code, tables, rules, and images using semantic tokens, so it follows the active
+theme:
+
+```html
+<article class="tc-prose">
+  <h1>Title</h1>
+  <p>Body text with <code>code</code> and a <a href="#">link</a>.</p>
+  <pre tabindex="0"><code>block code</code></pre>
+</article>
+```
+
+The container is capped at `--tc-prose-max`; center or place it in your own
+layout. Give `pre` blocks `tabindex="0"` so keyboard users can scroll long
+lines. The `h4` style is a small uppercase label.
+
+GFM task lists (`ul.contains-task-list` / `li.task-list-item` with a disabled
+checkbox), `kbd`, and `details`/`summary` are styled too. Wide tables scroll
+horizontally inside the table itself, with no wrapper element; give a table
+that can overflow `tabindex="0"` so keyboard users can scroll it. Task-list
+checkboxes need an accessible name (`aria-label` or a wrapping `<label>`); many
+markdown renderers omit one, and axe reports it as a `label` violation.
+
+`.tc-prose` depends on the other layers: `tokens.css` supplies every value it
+reads, and `base.css` supplies the monospace font for `code`/`kbd` and the
+link styling. Import `tokens.css`, `base.css`, and `patterns.css` (or the
+complete layer), not `patterns.css` alone.
+
+### In a sandboxed iframe
+
+A frame document does not inherit the host page's stylesheets, and a bare
+package specifier such as `@tinycloud/styles` does not resolve in a browser
+frame. Inline the CSS into
+the frame document as raw strings, in this order: tokens, base, patterns (which
+includes prose). Bundlers can supply the strings, for example Vite's `?raw`:
+
+```ts
+import tokens from "@tinycloud/styles/tokens.css?raw";
+import base from "@tinycloud/styles/base.css?raw";
+import patterns from "@tinycloud/styles/patterns.css?raw";
+
+const css = [tokens, base, patterns].join("\n");
+frame.srcdoc = `<!doctype html>
+<html data-theme="dark">
+<head><style>${css}</style></head>
+<body><article class="tc-prose">${renderedHtml}</article></body>
+</html>`;
+```
+
+Set `data-theme` on the frame's own `<html>`; it does not follow the host
+page's theme.
 
 Primitive palette tokens are exposed for visualizations and token tooling, but
 components should not read them directly.

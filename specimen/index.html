@@ -88,6 +88,15 @@
         margin-block-end: var(--tc-space-4);
       }
 
+      .specimen-prose-panel {
+        margin-block-start: var(--tc-space-5);
+        padding: var(--tc-space-6) var(--tc-space-5);
+      }
+
+      .specimen-prose-panel .tc-prose {
+        margin-inline: auto;
+      }
+
       @media (max-width: 48rem) {
         .specimen-shell {
           padding-block: var(--tc-space-6);
@@ -218,6 +227,125 @@
           </section>
         </aside>
       </div>
+
+      <section class="tc-panel specimen-prose-panel" aria-label="Long-form prose">
+        <article class="tc-prose" id="prose-specimen">
+          <h1>Sharing a space with a link</h1>
+          <p>
+            A share link carries a <strong>scoped, expiring delegation</strong>.
+            The recipient opens it, the viewer verifies the proof, and only then
+            is any content rendered. See the
+            <a href="#prose-specimen">verification notes</a> for the full flow,
+            or call <code>shares.create()</code> from a script.
+            Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy the link.
+          </p>
+
+          <h2>How a link is resolved</h2>
+          <p>
+            Resolution happens in three steps. Each step can fail on its own,
+            and the failure state names the step that rejected the link.
+          </p>
+          <ol>
+            <li>Parse the fragment and decode the delegation.</li>
+            <li>
+              Verify the chain of proofs:
+              <ul>
+                <li>issuer matches the space owner;</li>
+                <li>
+                  <code>expiry</code> is in the future and <code>nbf</code> has
+                  passed;
+                </li>
+                <li>the requested resource is covered by the scope.</li>
+              </ul>
+            </li>
+            <li>Fetch the content and render it in a sandboxed frame.</li>
+          </ol>
+
+          <h3>What the recipient sees</h3>
+          <p>
+            Identity, scope, and expiry stay visible above the content, so the
+            decision to trust the page can be made where it is needed.
+          </p>
+          <ul>
+            <li>Sender and space, shown as short identifiers.</li>
+            <li>The allowed action, such as <code>tc:kv/get</code>.</li>
+            <li>Time remaining before the link stops working.</li>
+          </ul>
+
+          <p>Before sending a link, check that:</p>
+          <ul class="contains-task-list">
+            <li class="task-list-item"><input type="checkbox" disabled checked aria-label="The scope covers only the files you mean to share"> The scope covers only the files you mean to share.</li>
+            <li class="task-list-item"><input type="checkbox" disabled checked aria-label="The expiry is as short as the recipient allows"> The expiry is as short as the recipient allows.</li>
+            <li class="task-list-item"><input type="checkbox" disabled aria-label="The recipient has confirmed the channel it arrives on"> The recipient has confirmed the channel it arrives on.</li>
+          </ul>
+
+          <blockquote>
+            <p>
+              Links are bearer credentials. Anyone who holds the full URL can
+              open the content until it expires, so share them like passwords.
+            </p>
+          </blockquote>
+
+          <figure>
+            <img
+              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 48 640 104'%3E%3Cg fill='none' stroke='%23768399' stroke-width='2.5'%3E%3Crect x='24' y='64' width='148' height='72' rx='8'/%3E%3Crect x='246' y='64' width='148' height='72' rx='8'/%3E%3Crect x='468' y='64' width='148' height='72' rx='8'/%3E%3C/g%3E%3Cg stroke='%234f7cf7' stroke-width='2' stroke-dasharray='2 6' stroke-linecap='round'%3E%3Cpath d='M172 100h74M394 100h74'/%3E%3C/g%3E%3Cg fill='%23768399' font-family='sans-serif' font-size='16' font-weight='600' text-anchor='middle'%3E%3Ctext x='98' y='105'%3ESender%3C/text%3E%3Ctext x='320' y='105'%3EShare link%3C/text%3E%3Ctext x='542' y='105'%3ERecipient%3C/text%3E%3C/g%3E%3C/svg%3E"
+              alt="Diagram: a sender creates a share link that a recipient opens."
+              width="640"
+              height="104"
+            >
+          </figure>
+
+          <h4>Example request</h4>
+          <pre tabindex="0" aria-label="Example request"><code>const link = await tc.shares.create({
+  space: "did:key:z6MkhaX4F9",
+  path: "reports/q3.md",
+  actions: ["tc/kv/get"],
+  expiresIn: "7d", // a link that never expires is rarely what you want
+});
+
+console.log(link.url);</code></pre>
+
+          <h2>Limits</h2>
+          <table tabindex="0" aria-label="Share limits">
+            <thead>
+              <tr>
+                <th scope="col">Kind</th>
+                <th scope="col">Limit</th>
+                <th scope="col">Behavior when exceeded</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Markdown</td>
+                <td>1&nbsp;MB</td>
+                <td>The viewer offers a download instead.</td>
+              </tr>
+              <tr>
+                <td>Link lifetime</td>
+                <td>30 days</td>
+                <td>Creation fails with <code>expiry_too_long</code>.</td>
+              </tr>
+              <tr>
+                <td>Recipients</td>
+                <td>Unlimited for bearer links</td>
+                <td>Not applicable.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <details>
+            <summary>Why can a link fail to open?</summary>
+            <p>The proof chain is invalid, the link has expired, or the scope does not cover the requested path.</p>
+          </details>
+
+          <hr>
+
+          <p>
+            Questions about a specific link? Open it, then choose
+            <em>Inspect proof</em> to see every delegation in the chain.
+          </p>
+        </article>
+      </section>
     </main>
 
     <script>

@@ -274,6 +274,258 @@
     }
   }
 
+  /*
+   * Long-form rendered markdown. Apply to the element that contains the
+   * rendered HTML: <article class="tc-prose">. Colors, spacing, and radii come
+   * from semantic tokens only, so both themes work without extra rules.
+   * Scrollable code blocks should be focusable (tabindex="0").
+   */
+  .tc-prose {
+    max-width: var(--tc-prose-max);
+    color: var(--tc-color-text);
+    font-size: var(--tc-text-lg);
+    line-height: var(--tc-leading-prose);
+    overflow-wrap: break-word;
+  }
+
+  .tc-prose > :first-child {
+    margin-block-start: 0;
+  }
+
+  .tc-prose > :last-child {
+    margin-block-end: 0;
+  }
+
+  .tc-prose :where(p, ul, ol, blockquote, pre, table, figure, details) {
+    margin-block: 0 var(--tc-space-4);
+  }
+
+  .tc-prose p {
+    max-width: none;
+  }
+
+  .tc-prose h1,
+  .tc-prose h2,
+  .tc-prose h3,
+  .tc-prose h4 {
+    margin-block: var(--tc-space-6) var(--tc-space-3);
+    color: var(--tc-color-text);
+    font-weight: var(--tc-weight-semibold);
+    line-height: var(--tc-leading-tight);
+  }
+
+  .tc-prose h1 {
+    margin-block-end: var(--tc-space-4);
+    font-size: var(--tc-text-2xl);
+    letter-spacing: var(--tc-tracking-tight);
+  }
+
+  .tc-prose h2 {
+    padding-block-end: var(--tc-space-2);
+    border-bottom: 1px solid var(--tc-color-border);
+    font-size: var(--tc-text-xl);
+  }
+
+  .tc-prose h3 {
+    font-size: var(--tc-text-lg);
+  }
+
+  .tc-prose h4 {
+    font-size: var(--tc-text-sm);
+    letter-spacing: var(--tc-tracking-label);
+    text-transform: uppercase;
+  }
+
+  .tc-prose strong {
+    font-weight: var(--tc-weight-semibold);
+  }
+
+  .tc-prose ul,
+  .tc-prose ol {
+    padding-inline-start: var(--tc-space-5);
+  }
+
+  .tc-prose li {
+    margin-block: var(--tc-space-1) 0;
+  }
+
+  .tc-prose li > :where(ul, ol) {
+    margin-block: var(--tc-space-1) 0;
+  }
+
+  .tc-prose li > p {
+    margin-block: var(--tc-space-2) 0;
+  }
+
+  /* GFM task lists: <ul class="contains-task-list"><li class="task-list-item"><input type="checkbox" disabled>. */
+  .tc-prose ul.contains-task-list {
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  .tc-prose li.task-list-item {
+    list-style: none;
+  }
+
+  /*
+   * The native disabled checkbox is near-invisible in light themes (GFM always
+   * renders task lists disabled), so draw the box from semantic tokens: an
+   * outlined square, with an accent-filled inner square when checked.
+   */
+  .tc-prose li.task-list-item > input[type="checkbox"] {
+    box-sizing: border-box;
+    width: 1.1em;
+    height: 1.1em;
+    margin: 0 var(--tc-space-2) 0 0;
+    padding: var(--tc-space-1);
+    vertical-align: middle;
+    background-color: transparent;
+    background-clip: content-box;
+    border: 1px solid var(--tc-color-text-muted);
+    border-radius: var(--tc-radius-sm);
+    accent-color: var(--tc-color-accent);
+    appearance: none;
+  }
+
+  .tc-prose li.task-list-item > input[type="checkbox"]:checked {
+    background-color: var(--tc-color-accent);
+    border-color: var(--tc-color-accent);
+  }
+
+  /*
+   * Forced colors replaces author backgrounds, so the accent-filled inner
+   * square would vanish and checked would equal unchecked. Opt the box out of
+   * adjustment and use system colors: ButtonText outline always, CanvasText
+   * inner fill only when checked.
+   */
+  @media (forced-colors: active) {
+    .tc-prose li.task-list-item > input[type="checkbox"] {
+      forced-color-adjust: none;
+      background-color: Canvas;
+      border-color: ButtonText;
+    }
+
+    .tc-prose li.task-list-item > input[type="checkbox"]:checked {
+      background-color: CanvasText;
+      border-color: ButtonText;
+    }
+  }
+
+  .tc-prose :where(blockquote, figure) {
+    margin-inline: 0;
+  }
+
+  .tc-prose blockquote {
+    padding: var(--tc-space-1) var(--tc-space-4);
+    border-inline-start: 3px solid var(--tc-color-text-muted);
+  }
+
+  .tc-prose blockquote > :last-child {
+    margin-block-end: 0;
+  }
+
+  .tc-prose kbd {
+    padding: 0 var(--tc-space-1);
+    background: var(--tc-color-surface-subtle);
+    border: 1px solid var(--tc-color-border);
+    border-radius: var(--tc-radius-sm);
+    font-size: 0.875em;
+  }
+
+  .tc-prose summary {
+    font-weight: var(--tc-weight-semibold);
+    cursor: pointer;
+  }
+
+  .tc-prose details[open] > summary {
+    margin-block-end: var(--tc-space-2);
+  }
+
+  .tc-prose code {
+    padding: 0 var(--tc-space-1);
+    background: var(--tc-color-surface-subtle);
+    border: 1px solid var(--tc-color-border);
+    border-radius: var(--tc-radius-sm);
+    font-size: 0.875em;
+    overflow-wrap: anywhere;
+  }
+
+  .tc-prose pre {
+    padding: var(--tc-space-4);
+    overflow-x: auto;
+    color: var(--tc-color-text);
+    background: var(--tc-color-surface-subtle);
+    border: 1px solid var(--tc-color-border);
+    border-radius: var(--tc-radius-md);
+    font-size: var(--tc-text-sm);
+    line-height: var(--tc-leading-ui);
+    tab-size: 2;
+  }
+
+  .tc-prose pre:focus-visible {
+    outline: 2px solid var(--tc-color-focus);
+    outline-offset: 2px;
+    box-shadow: var(--tc-focus-ring);
+  }
+
+  .tc-prose pre code {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    font-size: inherit;
+    overflow-wrap: normal;
+  }
+
+  /*
+   * Wide tables scroll horizontally instead of overflowing the container or
+   * breaking words mid-word; no wrapper element is required. A table that
+   * overflows is a scroll region, so keyboard users need tabindex="0" on it.
+   */
+  .tc-prose table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: var(--tc-text-md);
+    line-height: var(--tc-leading-ui);
+  }
+
+  .tc-prose table:focus-visible {
+    outline: 2px solid var(--tc-color-focus);
+    outline-offset: 2px;
+    box-shadow: var(--tc-focus-ring);
+  }
+
+  .tc-prose th,
+  .tc-prose td {
+    padding: var(--tc-space-2) var(--tc-space-3);
+    border-top: 1px dotted var(--tc-color-border);
+    text-align: start;
+    vertical-align: top;
+  }
+
+  .tc-prose th {
+    color: var(--tc-color-text);
+    background: var(--tc-color-surface-subtle);
+    border-top: 0;
+    border-bottom: 1px solid var(--tc-color-border);
+    font-weight: var(--tc-weight-semibold);
+  }
+
+  .tc-prose hr {
+    margin-block: var(--tc-space-6);
+    border: 0;
+    border-top: 1px dotted var(--tc-color-text-muted);
+  }
+
+  .tc-prose img {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--tc-radius-md);
+    vertical-align: middle;
+  }
+
   @media (max-width: 40rem) {
     .tc-toolbar {
       align-items: stretch;
