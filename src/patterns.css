@@ -440,6 +440,7 @@
     max-width: 100%;
     height: auto;
     border-radius: var(--tc-radius-md);
+    vertical-align: middle;
   }
 
   @media (max-width: 40rem) {
