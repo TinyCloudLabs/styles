@@ -13,7 +13,7 @@ technical information remains calm, and detail appears when it becomes useful.
 - Accessible light and dark themes
 - Base typography, focus, form, and motion behavior
 - Reusable product patterns for buttons, fields, badges, panels, status,
-  toolbars, data rows, traces, and skeletons
+  toolbars, data rows, traces, skeletons, and long-form prose (`.tc-prose`)
 - A zero-build specimen showing the system in context
 
 This is intentionally not a React component library. Product repositories keep
@@ -60,6 +60,23 @@ Use semantic tokens in product code:
   border-radius: var(--tc-radius-md);
 }
 ```
+
+Render markdown (or any long-form HTML) with `.tc-prose` on the container. It
+styles headings `h1`–`h4`, paragraphs, lists, blockquotes, inline and block
+code, tables, rules, and images using semantic tokens, so it follows the active
+theme:
+
+```html
+<article class="tc-prose">
+  <h1>Title</h1>
+  <p>Body text with <code>code</code> and a <a href="#">link</a>.</p>
+  <pre tabindex="0"><code>block code</code></pre>
+</article>
+```
+
+The container is capped at `--tc-prose-max`; center or place it in your own
+layout. Give `pre` blocks `tabindex="0"` so keyboard users can scroll long
+lines. The `h4` style is a small uppercase label.
 
 Primitive palette tokens are exposed for visualizations and token tooling, but
 components should not read them directly.

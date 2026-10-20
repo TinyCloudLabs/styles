@@ -53,6 +53,36 @@ for (const className of ["tc-button", "tc-input", "tc-panel", "tc-status", "tc-t
   assert.ok(contents.specimen.includes(className), `specimen does not exercise ${className}`);
 }
 
+// .tc-prose: the rules must live in @layer tc.patterns, use semantic tokens
+// only for color/space/radius, and the specimen must exercise every element.
+const proseElements = ["h1", "h2", "h3", "h4", "ul", "ol", "blockquote", "pre", "code", "table", "hr", "img"];
+const proseRules = contents.patterns.match(/\.tc-prose[^{}]*\{[^{}]*\}/g) ?? [];
+assert.ok(proseRules.length > 0, "patterns.css does not define .tc-prose");
+const patternsLayerStart = contents.patterns.indexOf("@layer tc.patterns");
+assert.ok(
+  patternsLayerStart !== -1 && contents.patterns.indexOf(".tc-prose") > patternsLayerStart,
+  ".tc-prose must be declared inside @layer tc.patterns",
+);
+const proseCss = proseRules.join("\n");
+assert.ok(!/--tc-palette-/.test(proseCss), ".tc-prose reads raw palette tokens");
+assert.ok(!/#[0-9a-f]{3,8}\b|\b(?:rgb|hsl|oklch|oklab)a?\(/i.test(proseCss), ".tc-prose uses a literal color");
+for (const [, property, value] of proseCss.matchAll(/(?:^|[\s;{])((?:margin|padding)[\w-]*|gap|border-radius)\s*:\s*([^;}]+)/g)) {
+  const literals = value.replace(/var\([^)]*\)/g, "").match(/-?[\d.]+[a-z%]+/g) ?? [];
+  assert.deepEqual(literals, [], `.tc-prose ${property} uses a literal length (${value.trim()}); use --tc-space-*/--tc-radius-*`);
+}
+for (const element of proseElements) {
+  const selector = new RegExp(`\\.tc-prose\\s+${element}\\b`);
+  assert.ok(selector.test(proseCss), `.tc-prose has no rule for ${element}`);
+}
+
+const proseMarkup = contents.specimen.match(/<article class="tc-prose"[^>]*>([\s\S]*?)<\/article>/)?.[1];
+assert.ok(proseMarkup, "specimen does not exercise tc-prose");
+for (const element of [...proseElements, "li", "th", "td", "strong", "em", "a"]) {
+  assert.ok(new RegExp(`<${element}[\\s>]`).test(proseMarkup), `specimen .tc-prose does not exercise <${element}>`);
+}
+assert.ok(/<pre[^>]*>\s*<code/.test(proseMarkup), "specimen .tc-prose needs a <pre><code> block");
+assert.ok(/<li[\s>][\s\S]*?<(?:ul|ol)[\s>][\s\S]*?<\/li>/.test(proseMarkup), "specimen .tc-prose needs a nested list");
+
 function luminance(hex) {
   const channels = hex
     .slice(1)
@@ -78,6 +108,54 @@ const requiredContrastPairs = [
   ["dark muted", "#94a3b8", "#12151e", 4.5],
   ["dark primary button", "#0b0e14", "#6a9aff", 4.5],
 ];
+
+// Role pairs are resolved from tokens.css so a token change cannot drift from the check.
+function themeBlock(selector) {
+  const start = contents.tokens.indexOf(selector);
+  assert.notEqual(start, -1, `tokens.css has no ${selector} block`);
+  return contents.tokens.slice(start, contents.tokens.indexOf("\n}", start));
+}
+
+function resolveColors(...blocks) {
+  const values = new Map();
+  for (const block of blocks) {
+    for (const [, name, value] of block.matchAll(/(--tc-[\w-]+):\s*([^;]+);/g)) {
+      values.set(name, value.trim());
+    }
+  }
+  return (name) => {
+    let value = values.get(name);
+    while (value?.startsWith("var(")) value = values.get(value.slice(4, -1));
+    assert.match(value ?? "", /^#[0-9a-f]{6}$/i, `${name} does not resolve to a hex color`);
+    return value;
+  };
+}
+
+const themes = {
+  light: resolveColors(themeBlock(":root,")),
+  dark: resolveColors(themeBlock(":root,"), themeBlock('[data-theme="dark"] {')),
+};
+
+// .tc-prose text sits on surface (panel), page (full-page frame), or subtle (code, table header).
+const proseRolePairs = [
+  ["body on surface", "text", "surface"],
+  ["body on page", "text", "page"],
+  ["code and table header", "text", "surface-subtle"],
+  ["link on surface", "link", "surface"],
+  ["link on page", "link", "page"],
+  ["link on subtle", "link", "surface-subtle"],
+];
+
+for (const [theme, resolve] of Object.entries(themes)) {
+  for (const [name, foreground, background] of proseRolePairs) {
+    requiredContrastPairs.push([
+      `${theme} prose ${name}`,
+      resolve(`--tc-color-${foreground}`),
+      resolve(`--tc-color-${background}`),
+      4.5,
+    ]);
+  }
+}
 
 for (const [name, foreground, background, minimum] of requiredContrastPairs) {
   const ratio = contrast(foreground, background);
