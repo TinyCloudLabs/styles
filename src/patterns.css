@@ -392,6 +392,25 @@
     border-color: var(--tc-color-accent);
   }
 
+  /*
+   * Forced colors replaces author backgrounds, so the accent-filled inner
+   * square would vanish and checked would equal unchecked. Opt the box out of
+   * adjustment and use system colors: ButtonText outline always, CanvasText
+   * inner fill only when checked.
+   */
+  @media (forced-colors: active) {
+    .tc-prose li.task-list-item > input[type="checkbox"] {
+      forced-color-adjust: none;
+      background-color: Canvas;
+      border-color: ButtonText;
+    }
+
+    .tc-prose li.task-list-item > input[type="checkbox"]:checked {
+      background-color: CanvasText;
+      border-color: ButtonText;
+    }
+  }
+
   .tc-prose :where(blockquote, figure) {
     margin-inline: 0;
   }

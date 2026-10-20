@@ -86,7 +86,37 @@ assert.ok(
   /\.tc-prose\s+ul\.contains-task-list/.test(proseCss) && /\.tc-prose\s+li\.task-list-item/.test(proseCss),
   ".tc-prose has no task-list rules",
 );
-assert.ok(!/overflow-wrap\s*:\s*anywhere/.test(proseCss.match(/\.tc-prose\s+t[hd][^{]*\{[^{}]*\}/)?.[0] ?? ""), ".tc-prose table cells must not break words mid-word");
+// Every rule that targets th/td (the grouped th, td rule and the separate th rule) must keep words intact.
+const cellRules = proseRules.filter((rule) => /\bt[hd]\b/.test(rule.slice(0, rule.indexOf("{"))));
+assert.ok(
+  cellRules.some((rule) => /\.tc-prose\s+th\b/.test(rule)) && cellRules.some((rule) => /\.tc-prose\s+td\b/.test(rule)),
+  ".tc-prose has no th/td rules to guard",
+);
+for (const rule of cellRules) {
+  assert.ok(!/overflow-wrap\s*:\s*anywhere/.test(rule), `.tc-prose table cells must not break words mid-word (${rule.split("{")[0].trim()})`);
+}
+
+// Forced colors drops author backgrounds; the task-list checkbox needs a system-color override so checked != unchecked.
+function mediaBlock(css, query) {
+  const start = css.indexOf(query);
+  if (start === -1) return "";
+  const open = css.indexOf("{", start);
+  let depth = 0;
+  for (let index = open; index < css.length; index += 1) {
+    if (css[index] === "{") depth += 1;
+    if (css[index] === "}" && --depth === 0) return css.slice(open, index + 1);
+  }
+  return "";
+}
+const forcedColors = mediaBlock(contents.patterns, "@media (forced-colors: active)");
+assert.ok(
+  /li\.task-list-item\s*>\s*input\[type="checkbox"\]:checked\s*\{[^{}]*background-color\s*:\s*(?:CanvasText|Highlight)/.test(forcedColors),
+  "patterns.css needs @media (forced-colors: active) giving the checked task-list checkbox a system-color fill",
+);
+assert.ok(
+  /li\.task-list-item\s*>\s*input\[type="checkbox"\]\s*\{[^{}]*border-color\s*:\s*ButtonText/.test(forcedColors),
+  "patterns.css forced-colors block needs a ButtonText outline on the task-list checkbox",
+);
 assert.ok(
   /<ul[^>]*contains-task-list[^>]*>[\s\S]*?<li[^>]*task-list-item[^>]*>\s*<input[^>]*type="checkbox"/.test(proseMarkup),
   "specimen .tc-prose needs a GFM task list",
