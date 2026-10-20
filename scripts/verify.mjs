@@ -55,7 +55,7 @@ for (const className of ["tc-button", "tc-input", "tc-panel", "tc-status", "tc-t
 
 // .tc-prose: the rules must live in @layer tc.patterns, use semantic tokens
 // only for color/space/radius, and the specimen must exercise every element.
-const proseElements = ["h1", "h2", "h3", "h4", "ul", "ol", "blockquote", "pre", "code", "table", "hr", "img"];
+const proseElements = ["h1", "h2", "h3", "h4", "ul", "ol", "blockquote", "pre", "code", "table", "hr", "img", "kbd", "summary"];
 const proseRules = contents.patterns.match(/\.tc-prose[^{}]*\{[^{}]*\}/g) ?? [];
 assert.ok(proseRules.length > 0, "patterns.css does not define .tc-prose");
 const patternsLayerStart = contents.patterns.indexOf("@layer tc.patterns");
@@ -65,6 +65,7 @@ assert.ok(
 );
 const proseCss = proseRules.join("\n");
 assert.ok(!/--tc-palette-/.test(proseCss), ".tc-prose reads raw palette tokens");
+assert.ok(!/!important/i.test(proseCss), ".tc-prose must not use !important");
 assert.ok(!/#[0-9a-f]{3,8}\b|\b(?:rgb|hsl|oklch|oklab)a?\(/i.test(proseCss), ".tc-prose uses a literal color");
 for (const [, property, value] of proseCss.matchAll(/(?:^|[\s;{])((?:margin|padding)[\w-]*|gap|border-radius)\s*:\s*([^;}]+)/g)) {
   const literals = value.replace(/var\([^)]*\)/g, "").match(/-?[\d.]+[a-z%]+/g) ?? [];
@@ -81,6 +82,18 @@ for (const element of [...proseElements, "li", "th", "td", "strong", "em", "a"])
   assert.ok(new RegExp(`<${element}[\\s>]`).test(proseMarkup), `specimen .tc-prose does not exercise <${element}>`);
 }
 assert.ok(/<pre[^>]*>\s*<code/.test(proseMarkup), "specimen .tc-prose needs a <pre><code> block");
+assert.ok(
+  /\.tc-prose\s+ul\.contains-task-list/.test(proseCss) && /\.tc-prose\s+li\.task-list-item/.test(proseCss),
+  ".tc-prose has no task-list rules",
+);
+assert.ok(!/overflow-wrap\s*:\s*anywhere/.test(proseCss.match(/\.tc-prose\s+t[hd][^{]*\{[^{}]*\}/)?.[0] ?? ""), ".tc-prose table cells must not break words mid-word");
+assert.ok(
+  /<ul[^>]*contains-task-list[^>]*>[\s\S]*?<li[^>]*task-list-item[^>]*>\s*<input[^>]*type="checkbox"/.test(proseMarkup),
+  "specimen .tc-prose needs a GFM task list",
+);
+for (const element of ["kbd", "details", "summary"]) {
+  assert.ok(new RegExp(`<${element}[\\s>]`).test(proseMarkup), `specimen .tc-prose does not exercise <${element}>`);
+}
 assert.ok(/<li[\s>][\s\S]*?<(?:ul|ol)[\s>][\s\S]*?<\/li>/.test(proseMarkup), "specimen .tc-prose needs a nested list");
 
 function luminance(hex) {

@@ -237,6 +237,7 @@
             is any content rendered. See the
             <a href="#prose-specimen">verification notes</a> for the full flow,
             or call <code>shares.create()</code> from a script.
+            Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy the link.
           </p>
 
           <h2>How a link is resolved</h2>
@@ -271,6 +272,13 @@
             <li>Time remaining before the link stops working.</li>
           </ul>
 
+          <p>Before sending a link, check that:</p>
+          <ul class="contains-task-list">
+            <li class="task-list-item"><input type="checkbox" disabled checked aria-label="The scope covers only the files you mean to share"> The scope covers only the files you mean to share.</li>
+            <li class="task-list-item"><input type="checkbox" disabled checked aria-label="The expiry is as short as the recipient allows"> The expiry is as short as the recipient allows.</li>
+            <li class="task-list-item"><input type="checkbox" disabled aria-label="The recipient has confirmed the channel it arrives on"> The recipient has confirmed the channel it arrives on.</li>
+          </ul>
+
           <blockquote>
             <p>
               Links are bearer credentials. Anyone who holds the full URL can
@@ -298,7 +306,7 @@
 console.log(link.url);</code></pre>
 
           <h2>Limits</h2>
-          <table>
+          <table tabindex="0" aria-label="Share limits">
             <thead>
               <tr>
                 <th scope="col">Kind</th>
@@ -324,6 +332,11 @@ console.log(link.url);</code></pre>
               </tr>
             </tbody>
           </table>
+
+          <details>
+            <summary>Why can a link fail to open?</summary>
+            <p>The proof chain is invalid, the link has expired, or the scope does not cover the requested path.</p>
+          </details>
 
           <hr>
 

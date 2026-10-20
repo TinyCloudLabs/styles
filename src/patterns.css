@@ -296,7 +296,7 @@
     margin-block-end: 0;
   }
 
-  .tc-prose :where(p, ul, ol, blockquote, pre, table, figure) {
+  .tc-prose :where(p, ul, ol, blockquote, pre, table, figure, details) {
     margin-block: 0 var(--tc-space-4);
   }
 
@@ -357,6 +357,41 @@
     margin-block: var(--tc-space-2) 0;
   }
 
+  /* GFM task lists: <ul class="contains-task-list"><li class="task-list-item"><input type="checkbox" disabled>. */
+  .tc-prose ul.contains-task-list {
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  .tc-prose li.task-list-item {
+    list-style: none;
+  }
+
+  /*
+   * The native disabled checkbox is near-invisible in light themes (GFM always
+   * renders task lists disabled), so draw the box from semantic tokens: an
+   * outlined square, with an accent-filled inner square when checked.
+   */
+  .tc-prose li.task-list-item > input[type="checkbox"] {
+    box-sizing: border-box;
+    width: 1.1em;
+    height: 1.1em;
+    margin: 0 var(--tc-space-2) 0 0;
+    padding: var(--tc-space-1);
+    vertical-align: middle;
+    background-color: transparent;
+    background-clip: content-box;
+    border: 1px solid var(--tc-color-text-muted);
+    border-radius: var(--tc-radius-sm);
+    accent-color: var(--tc-color-accent);
+    appearance: none;
+  }
+
+  .tc-prose li.task-list-item > input[type="checkbox"]:checked {
+    background-color: var(--tc-color-accent);
+    border-color: var(--tc-color-accent);
+  }
+
   .tc-prose :where(blockquote, figure) {
     margin-inline: 0;
   }
@@ -368,6 +403,23 @@
 
   .tc-prose blockquote > :last-child {
     margin-block-end: 0;
+  }
+
+  .tc-prose kbd {
+    padding: 0 var(--tc-space-1);
+    background: var(--tc-color-surface-subtle);
+    border: 1px solid var(--tc-color-border);
+    border-radius: var(--tc-radius-sm);
+    font-size: 0.875em;
+  }
+
+  .tc-prose summary {
+    font-weight: var(--tc-weight-semibold);
+    cursor: pointer;
+  }
+
+  .tc-prose details[open] > summary {
+    margin-block-end: var(--tc-space-2);
   }
 
   .tc-prose code {
@@ -406,11 +458,24 @@
     overflow-wrap: normal;
   }
 
+  /*
+   * Wide tables scroll horizontally instead of overflowing the container or
+   * breaking words mid-word; no wrapper element is required. A table that
+   * overflows is a scroll region, so keyboard users need tabindex="0" on it.
+   */
   .tc-prose table {
-    width: 100%;
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
     border-collapse: collapse;
     font-size: var(--tc-text-md);
     line-height: var(--tc-leading-ui);
+  }
+
+  .tc-prose table:focus-visible {
+    outline: 2px solid var(--tc-color-focus);
+    outline-offset: 2px;
+    box-shadow: var(--tc-focus-ring);
   }
 
   .tc-prose th,
@@ -419,7 +484,6 @@
     border-top: 1px dotted var(--tc-color-border);
     text-align: start;
     vertical-align: top;
-    overflow-wrap: anywhere;
   }
 
   .tc-prose th {
